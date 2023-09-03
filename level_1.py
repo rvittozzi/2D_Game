@@ -1,6 +1,8 @@
 import pygame
 import sys
-from start_screen import start_screen  # Import the start_screen function
+import random
+
+from start_screen import start_screen
 
 # Initialize Pygame
 pygame.init()
@@ -102,8 +104,20 @@ enemy_respawn_timer = 0
 enemy_respawn_delay = 5  # 5 seconds respawn delay
 enemy_respawned = False
 
+
+# Define enemy patrol variables
+patrol_points = [(600, 300), (400, 300), (200, 300)]  # Define patrol points here
+current_patrol_point = 0
+patrol_speed = 0.9  # Adjust the speed as needed
+
+# Initialize the player's score
+score = 0
+
 # Main game loop
 clock = pygame.time.Clock()
+
+# Define a list of spawn points for the enemy
+enemy_spawn_points = [(600, 300), (400, 300), (200, 300), (300, 300), (500, 300)]  # Add more spawn points as needed
 
 while True:
     keys = pygame.key.get_pressed()
@@ -178,10 +192,14 @@ while True:
             ):
                 enemy["health"] -= PUNCH_DAMAGE
                 if enemy["health"] <= 0:
-                    enemy["x"] = -enemy["scaled_width"]
-                    enemy["y"] = -enemy["scaled_height"]
-                    enemy_respawn_timer = pygame.time.get_ticks() + enemy_respawn_delay * 1000
-                    enemy_respawned = False
+                    # Randomly select a spawn point for the enemy
+                    random_spawn_point = random.choice(enemy_spawn_points)
+                    enemy["x"], enemy["y"] = random_spawn_point
+                    enemy["health"] = 100  # Set enemy health to full HP
+                    # Increase the player's score
+                    score += 50  # Add 50 points for each defeated enemy
+                # Reset the punch animation here (added)
+                player1["is_punching"] = False
         else:
             if is_moving:
                 animation_index = (animation_index + 1) % len(run_frames)
@@ -189,16 +207,17 @@ while True:
             else:
                 current_animation = idle_frames
 
-        if not enemy_respawned and pygame.time.get_ticks() >= enemy_respawn_timer:
-            enemy["x"] = 600
-            enemy["y"] = 300
-            enemy["health"] = 100
-            enemy_respawned = True
+        # Draw the enemy at the new position
+        screen.blit(pygame.transform.scale(enemy_sprite, (enemy["scaled_width"], enemy["scaled_height"])), (enemy["x"], enemy["y"]))
 
         screen.blit(pygame.transform.scale(current_animation[animation_index], (player1["scaled_width"], player1["scaled_height"])), (player1["x"], player1["y"]))
-        screen.blit(pygame.transform.scale(enemy_sprite, (enemy["scaled_width"], enemy["scaled_height"])), (enemy["x"], enemy["y"]))
         draw_health_bar(screen, player1["x"], player1["y"] - 20, player1["health"], 100)
         draw_health_bar(screen, enemy["x"], enemy["y"] - 20, enemy["health"], 100)
+
+        # Display the player's score on the screen
+        font = pygame.font.Font(None, 36)
+        score_text = font.render(f"Score: {score}", True, (255, 255, 255))
+        screen.blit(score_text, (10, 10))
 
     pygame.display.flip()
     clock.tick(60)
