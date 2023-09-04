@@ -120,6 +120,11 @@ patrol_speed = 0.9  # Adjust the speed as needed
 # Initialize the player's score
 score = 0
 
+PUNCH_DAMAGE = 25
+JUMP_ATTACK_DAMAGE = 2 * PUNCH_DAMAGE
+
+input_history = []
+
 # Main game loop
 clock = pygame.time.Clock()
 
@@ -209,6 +214,16 @@ while True:
                         gameState = GAME_STATE_WIN  # Transition to the win state
                 # Reset the punch animation here (added)
                 player1["is_punching"] = False
+
+                if keys[pygame.K_SPACE]:
+                    if keys[pygame.K_v] and not player1["is_jumping"]:
+                     # Perform the jump attack here
+                        player1["is_punching"] = True
+                        player1["punch_cooldown"] = PUNCH_COOLDOWN
+                    elif not player1["is_jumping"]:
+                        player1["is_jumping"] = True
+                        player1["jump_velocity"] = -player1["jump_height"]
+
         else:
             if not player1["is_jumping"]:
                 # Change the animation frames to idle frames when not jumping
