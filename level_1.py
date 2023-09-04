@@ -7,9 +7,16 @@ from start_screen import start_screen
 # Initialize Pygame
 pygame.init()
 
+# Initialize Pygame mixer
+pygame.mixer.init()
+
+# Load and play background music
+pygame.mixer.music.load("sprites/audio/main.wav")
+pygame.mixer.music.play(-1)  # -1 means loop indefinitely
+
 # Define constants
 WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
-GAME_STATE_START, GAME_STATE_PLAY = 1, 2
+GAME_STATE_START, GAME_STATE_PLAY, GAME_STATE_WIN = 1, 2, 3  # Add GAME_STATE_WIN
 PUNCH_DAMAGE, PUNCH_HITBOX_WIDTH, PUNCH_HITBOX_HEIGHT, PUNCH_COOLDOWN = 25, 20, 40, 60
 animationSpeed = 0.2
 
@@ -64,7 +71,7 @@ enemy = {
     "scaled_height": 100 * scaling_factor,
 }
 
-# Game state
+# Initialize game state
 gameState = GAME_STATE_START
 
 # Define the draw_health_bar function
@@ -81,9 +88,10 @@ def draw_health_bar(surface, x, y, current_health, max_health, width=100, height
     pygame.draw.rect(surface, (255, 0, 0), (x, y, width, height))
     pygame.draw.rect(surface, color, (x, y, health_width, height))
 
-# Load individual sprite images for idle and run
+# Load individual sprite images for idle, run, and jump
 idle_frames = [pygame.image.load(f"sprites/Player1/idle/idle{i}.png") for i in range(1, 5)]
 run_frames = [pygame.image.load(f"sprites/Player1/run/run{i}.png") for i in range(1, 5)]
+jump_frames = [pygame.image.load(f"sprites/Player1/jump/jump{i}.png") for i in range(1, 5)]
 current_animation = idle_frames
 animation_index = 0
 
@@ -103,7 +111,6 @@ ground_surface.fill(ground_color)
 enemy_respawn_timer = 0
 enemy_respawn_delay = 5  # 5 seconds respawn delay
 enemy_respawned = False
-
 
 # Define enemy patrol variables
 patrol_points = [(600, 300), (400, 300), (200, 300)]  # Define patrol points here
@@ -198,10 +205,15 @@ while True:
                     enemy["health"] = 100  # Set enemy health to full HP
                     # Increase the player's score
                     score += 50  # Add 50 points for each defeated enemy
+                    if score >= 50:  # Change to the desired score threshold
+                        gameState = GAME_STATE_WIN  # Transition to the win state
                 # Reset the punch animation here (added)
                 player1["is_punching"] = False
         else:
-            if is_moving:
+            if not player1["is_jumping"]:
+                # Change the animation frames to idle frames when not jumping
+                current_animation = idle_frames
+            elif is_moving:
                 animation_index = (animation_index + 1) % len(run_frames)
                 current_animation = run_frames
             else:
@@ -218,6 +230,20 @@ while True:
         font = pygame.font.Font(None, 36)
         score_text = font.render(f"Score: {score}", True, (255, 255, 255))
         screen.blit(score_text, (10, 10))
+
+    elif gameState == GAME_STATE_WIN:
+        # Create a text surface with the congratulatory message
+        congrats_text = font.render("Congrats, you win!", True, (255, 255, 255))
+
+        # Calculate the position to center the text on the screen
+        text_x = (WINDOW_WIDTH - congrats_text.get_width()) // 2
+        text_y = (WINDOW_HEIGHT - congrats_text.get_height()) // 2
+
+        # Fill the screen with a background color (e.g., black)
+        screen.fill((0, 0, 0))
+
+        # Blit the congratulatory message onto the screen
+        screen.blit(congrats_text, (text_x, text_y))
 
     pygame.display.flip()
     clock.tick(60)
