@@ -1,6 +1,4 @@
-Certainly, here's a `README` file for the provided code snippets:
-
-# 2D Fighter Game in Python
+# Street Warriors
 
 This is a simple 2D fighter game developed in Python using the Pygame library. Below, you'll find an overview of the code and its components.
 
@@ -46,4 +44,39 @@ To run the game, follow these steps:
 
 - The code includes an optional level 2 start message. If not needed, you can remove or modify this section.
 
-Feel free to explore and enhance the game as needed for your Python game development project. Good luck, and have fun coding!
+
+Contributing
+We welcome contributions from the community to help improve and expand Street Warriors. If you'd like to contribute, please follow these guidelines:
+
+Fork this repository and create a new branch for your work.
+
+Implement your changes, whether it's adding new levels, improving gameplay, or fixing bugs.
+
+Ensure your code adheres to the project's coding standards.
+
+Submit a pull request with a clear description of your modifications.
+
+Collaborate with other contributors to review and enhance your contributions.
+
+Reporting Issues
+If you encounter any issues or have suggestions for improvements, please let us know. Follow these steps to report issues:
+
+Go to the Issues section of this repository.
+
+Click on the "New Issue" button.
+
+Provide a detailed description of the issue or suggestion, including steps to reproduce if applicable.
+
+Our team will review and address your feedback promptly.
+
+License
+This project is licensed under MIT License. Detailed licensing information can be found in the LICENSE file.
+
+Contact
+If you have questions or need further assistance, feel free to reach out to the project maintainers:
+
+rvittozzi via Github
+
+Thank you for your interest in Street Warriors! Join us in making this game an even more exciting and engaging experience for players worldwide.
+
+Get ready for battle, and happy coding!
