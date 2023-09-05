@@ -10,7 +10,7 @@ pygame.init()
 
 # Set up game window and other configurations
 screen = pygame.display.set_mode((800, 600))
-pygame.display.set_caption('Your Game Title')
+pygame.display.set_caption('Street Warriors')
 
 # Main game loop
 running = True

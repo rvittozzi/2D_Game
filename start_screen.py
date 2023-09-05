@@ -7,7 +7,7 @@ def start_screen(screen, window_width, window_height):
     
     # Load and display a game title or logo
     title_font = pygame.font.Font(None, 72)
-    title_text = title_font.render("2D Fighter Game", True, (255, 255, 255))
+    title_text = title_font.render("Street Warriors", True, (255, 255, 255))
     title_rect = title_text.get_rect(center=(window_width / 2, window_height / 4))
 
     # Instructions
